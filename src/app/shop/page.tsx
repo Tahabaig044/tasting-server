@@ -1,5 +1,5 @@
-"use client";
-import { useEffect, useState } from "react";
+
+// import { useEffect, useState } from "react";
 import Link from "next/link";
 import { FaShoppingCart, FaSearch } from "react-icons/fa";
 import Header from "@/components/Header";
@@ -13,13 +13,13 @@ interface FoodItem {
   slug: { current: string };
 }
 
-const ShopPage = () => {
-  const [sortOption, setSortOption] = useState("Newest");
-  const [shop, setShop] = useState<FoodItem[]>([]);
+const ShopPage = async() => {
+  // const [sortOption, setSortOption] = useState("Newest");
+  // const [shop, setShop] = useState<FoodItem[]>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
+  // useEffect(() => {
+  //   const fetchData =  () => {
+  //     try {
         const Query = `*[_type == "food"] {
           name,
           _id,
@@ -28,14 +28,7 @@ const ShopPage = () => {
           price,
         }`;
         const data = await client.fetch(Query);
-        console.log("Fetched data:", data); // Debug line
-        setShop(data);
-      } catch (error) {
-        console.error("Error fetching data:", error); // Error handling
-      }
-    };
-    fetchData();
-  }, []);
+        
   return (
     <div>
       <Header />
@@ -67,8 +60,8 @@ const ShopPage = () => {
             <div className="flex items-center gap-2 mb-4 md:mb-0">
               <span className="text-xl text-gray-700">Sort By:</span>
               <select
-                value={sortOption}
-                onChange={(e) => setSortOption(e.target.value)} // Update the sort option
+                // value={sortOption}
+                // onChange={(e) => setSortOption(e.target.value)} // Update the sort option
                 className="border border-gray-300 rounded-md p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               >
                 <option>Newest</option>
@@ -79,7 +72,7 @@ const ShopPage = () => {
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {shop.map((product) => (
+            {data.map((product:FoodItem) => (
               <Link key={product._id} href={`/shop/${product._id}`} passHref>
                 <div className="relative bg-[#F7F7F7] rounded-lg shadow-lg overflow-hidden group cursor-pointer transition-transform transform hover:scale-105">
                   <img
