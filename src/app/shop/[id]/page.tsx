@@ -1,7 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { FaShoppingCart, FaTrashAlt } from "react-icons/fa";
+import Image from "next/image";
+import { FaTrashAlt } from "react-icons/fa";
 import Header from "@/components/Header";
 import { client } from "@/sanity/lib/client";
 
@@ -11,8 +12,6 @@ interface Product {
   description: string;
   price: string;
   imageSrc: string;
-  // flavors?: string[];
-  // sizes?: string[];
 }
 
 interface CartItem {
@@ -20,8 +19,6 @@ interface CartItem {
   title: string;
   price: string;
   imageSrc: string;
-  // flavor: string;
-  // size: string;
   quantity: number;
 }
 
@@ -31,12 +28,9 @@ interface PageProps {
 
 const ProductDetailsPage = ({ params }: PageProps) => {
   const [product, setProduct] = useState<Product | null>(null);
-  const [selectedFlavor, setSelectedFlavor] = useState<string | null>(null);
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -70,20 +64,18 @@ const ProductDetailsPage = ({ params }: PageProps) => {
   }, [params.id]);
 
   const handleAddToCart = () => {
-    
+    if (product) {
+      const cartItem: CartItem = {
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        imageSrc: product.imageSrc,
+        quantity,
+      };
 
-    const cartItem: CartItem = {
-      id: product!.id,
-      title: product!.title,
-      price: product!.price,
-      imageSrc: product!.imageSrc,
-      // flavor: selectedFlavor,
-      // size: selectedSize,
-      quantity,
-    };
-
-    setCart((prevCart) => [...prevCart, cartItem]);
-    setIsCartOpen(true);
+      setCart((prevCart) => [...prevCart, cartItem]);
+      setIsCartOpen(true);
+    }
   };
 
   const handleRemoveFromCart = (id: string) => {
@@ -92,7 +84,7 @@ const ProductDetailsPage = ({ params }: PageProps) => {
 
   const calculateTotal = () => {
     const total = cart.reduce((acc, item) => acc + parseFloat(item.price) * item.quantity, 0);
-    const deliveryCharges = 150; // Delivery charges in RS
+    const deliveryCharges = 150;
     return { total, deliveryCharges, grandTotal: total + deliveryCharges };
   };
 
@@ -125,54 +117,18 @@ const ProductDetailsPage = ({ params }: PageProps) => {
       <div className="container mx-auto p-6 py-11 mt-7">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-16">
           <div className="relative">
-            <img
-              className="w-full rounded-lg object-cover shadow-lg"
+            <Image
               src={product.imageSrc}
               alt={product.title}
+              width={500}
+              height={500}
+              className="w-full rounded-lg object-cover shadow-lg"
             />
           </div>
 
           <div className="space-y-6">
             <h2 className="text-4xl font-extrabold text-gray-800">{product.title}</h2>
             <p className="text-lg text-gray-600 leading-relaxed">{product.description}</p>
-
-            <div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">Flavors</h3>
-              <div className="flex flex-wrap gap-3">
-                {/* {product.flavors?.map((flavor) => (
-                  <button
-                    key={flavor}
-                    className={`px-4 py-2 rounded-lg font-medium shadow-sm transition-all ${
-                      selectedFlavor === flavor
-                        ? "bg-yellow-500 text-white"
-                        : "bg-yellow-100 text-yellow-800"
-                    }`}
-                    onClick={() => setSelectedFlavor(flavor)}
-                  >
-                    {flavor}
-                  </button>
-                ))} */}
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">Sizes</h3>
-              <div className="flex flex-wrap gap-3">
-                {/* {product.sizes?.map((size) => (
-                  <button
-                    key={size}
-                    className={`px-4 py-2 rounded-lg font-medium shadow-sm transition-all ${
-                      selectedSize === size
-                        ? "bg-gray-700 text-white"
-                        : "bg-gray-100 text-gray-800"
-                    }`}
-                    onClick={() => setSelectedSize(size)}
-                  >
-                    {size}
-                  </button>
-                ))} */}
-              </div>
-            </div>
 
             <div className="flex items-center space-x-4 mt-4">
               <button
@@ -200,13 +156,6 @@ const ProductDetailsPage = ({ params }: PageProps) => {
               </button>
             </div>
           </div>
-        </div>
-
-        <div className="mb-16">
-          <h2 className="text-4xl font-bold text-gray-800 text-center mb-12">
-            <span className="text-yellow-500">Related Products</span>
-          </h2>
-          {/* Related Products Component */}
         </div>
 
         {isCartOpen && (
@@ -246,18 +195,17 @@ const ProductDetailsPage = ({ params }: PageProps) => {
                       key={item.id}
                       className="flex items-center p-4 bg-gray-100 rounded-lg shadow-md"
                     >
-                      <img
+                      <Image
                         src={item.imageSrc}
                         alt={item.title}
+                        width={64}
+                        height={64}
                         className="w-16 h-16 object-cover rounded-lg border"
                       />
                       <div className="ml-4 flex-1">
                         <h3 className="text-lg font-semibold text-gray-800 truncate">
                           {item.title}
                         </h3>
-                        <p className="text-sm text-gray-600">
-                          {/* {item.flavor} - {item.size} */}
-                        </p>
                         <p className="text-gray-700 text-sm">Quantity: {item.quantity}</p>
                       </div>
                       <button

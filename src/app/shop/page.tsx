@@ -1,7 +1,7 @@
-'use client'
+"use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { FaShoppingCart, FaSearch } from "react-icons/fa"; 
+import { FaShoppingCart, FaSearch } from "react-icons/fa";
 import Header from "@/components/Header";
 import { client } from "@/sanity/lib/client";
 
@@ -14,7 +14,6 @@ interface FoodItem {
 }
 
 const ShopPage = () => {
-  const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("Newest");
   const [shop, setShop] = useState<FoodItem[]>([]);
 
@@ -47,7 +46,10 @@ const ShopPage = () => {
         <div className="text-center text-white">
           <h2 className="text-4xl font-bold">Our Shop</h2>
           <p className="pt-[10px]">
-            <Link href="/" className="text-yellow-400">Home</Link> › Shop
+            <Link href="/" className="text-yellow-400">
+              Home
+            </Link>{" "}
+            › Shop
           </p>
         </div>
       </section>
@@ -66,6 +68,7 @@ const ShopPage = () => {
               <span className="text-xl text-gray-700">Sort By:</span>
               <select
                 value={sortOption}
+                onChange={(e) => setSortOption(e.target.value)} // Update the sort option
                 className="border border-gray-300 rounded-md p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               >
                 <option>Newest</option>
@@ -94,7 +97,9 @@ const ShopPage = () => {
                         </span>
                         <button className="flex items-center gap-2 bg-[#8f8d8d] text-white rounded-md p-2 hover:bg-[#6d6b6b] transition-all focus:outline-none">
                           <FaShoppingCart className="text-lg" />
-                          <span className="text-sm font-semibold">Add to Cart</span>
+                          <span className="text-sm font-semibold">
+                            Add to Cart
+                          </span>
                         </button>
                       </div>
                     </div>
