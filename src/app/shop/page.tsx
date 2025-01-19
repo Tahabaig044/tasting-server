@@ -14,7 +14,6 @@ interface FoodItem {
 }
 
 const ShopPage = () => {
-  const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("Newest");
   const [shop, setShop] = useState<FoodItem[]>([]);
 
